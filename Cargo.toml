@@ -4,8 +4,12 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-candle-core = { git = "https://github.com/huggingface/candle.git", version = "0.6.0", features = ["cuda"] }
-candle-nn = { git = "https://github.com/huggingface/candle.git", version = "0.6.0", features = ["cuda"] }
+candle-core = { git = "https://github.com/huggingface/candle.git", version = "0.6.0" }
+candle-nn = { git = "https://github.com/huggingface/candle.git", version = "0.6.0" }
 paste = "1.0.15"
 pyo3 = "0.22.2"
 tabled = "0.16.0"
+
+[features]
+cuda = ["candle-core/cuda", "candle-nn/cuda"]
+metal = ["candle-core/metal", "candle-nn/metal"]

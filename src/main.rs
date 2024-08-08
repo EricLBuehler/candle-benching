@@ -64,41 +64,38 @@ fn benchmark_thing(f: impl Fn(), n: usize) -> BenchResults {
 
 fn main() {
     pyo3::prepare_freethreaded_python();
-    let device = Device::new_cuda(0).unwrap();
+    let device = if candle_core::utils::cuda_is_available() {
+        Device::new_cuda(0).unwrap()
+    } else if candle_core::utils::metal_is_available() {
+        Device::new_metal(0).unwrap()
+    } else {
+        Device::Cpu
+    };
 
     let mut results = Vec::new();
 
-    let devices = if device.is_cpu() {
-        vec![device]
-    } else {
-        vec![device, Device::Cpu]
-    };
+    let n = if device.is_cpu() { 1000 } else { 100_000 };
+    println!("===== BENCHMARKING WITH DEVICE {device:?} =====\n");
+    println!("Benching same-shape binary: add");
+    run_a_bench!(add, n, device, results);
+    println!("Benching same-shape binary: matmul");
+    run_a_bench!(matmul, n, device, results);
 
-    for device in devices {
-        let n = if device.is_cpu() { 1000 } else { 100_000 };
-        println!("===== BENCHMARKING WITH DEVICE {device:?} =====\n");
-        println!("Benching same-shape binary: add");
-        run_a_bench!(add, n, device, results);
-        println!("Benching same-shape binary: matmul");
-        run_a_bench!(matmul, n, device, results);
+    println!("Benching unary: relu");
+    run_a_bench!(relu, n, device, results);
+    println!("Benching unary: gelu");
+    run_a_bench!(gelu, n, device, results);
+    println!("Benching unary: silu");
+    run_a_bench!(silu, n, device, results);
+    println!("Benching unary: softmax (last dim)");
+    run_a_bench!(softmax, n, device, results);
 
-        println!("Benching unary: relu");
-        run_a_bench!(relu, n, device, results);
-        println!("Benching unary: gelu");
-        run_a_bench!(gelu, n, device, results);
-        println!("Benching unary: silu");
-        run_a_bench!(silu, n, device, results);
-        println!("Benching unary: softmax (last dim)");
-        run_a_bench!(softmax, n, device, results);
-
-        println!("Benching layout: reshape (256, 4, 1024, 8) -> (4096, 2048)");
-        run_a_bench!(reshape, n, device, results);
-        println!("Benching layout: transpose (swap last 2)");
-        run_a_bench!(transpose, n, device, results);
-        println!("Benching layout: narrow (256, 1024, 4) -> (2, 512, 4)");
-        run_a_bench!(narrow, n, device, results);
-        println!();
-    }
+    println!("Benching layout: reshape (256, 4, 1024, 8) -> (4096, 2048)");
+    run_a_bench!(reshape, n, device, results);
+    println!("Benching layout: transpose (swap last 2)");
+    run_a_bench!(transpose, n, device, results);
+    println!("Benching layout: narrow (256, 1024, 4) -> (2, 512, 4)");
+    run_a_bench!(narrow, n, device, results);
 
     let table = Table::new(results).to_string();
     println!("\n\nBenchmark results\n{table}");
