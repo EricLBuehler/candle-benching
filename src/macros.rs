@@ -163,7 +163,7 @@ macro_rules! benchmark_same_shape_layout {
 
 #[macro_export]
 macro_rules! run_a_bench {
-    ($name:ident, $n:expr, $device:ident, $results:ident) => {
+    ($name:ident, $n:expr, $device:ident, $results:ident, $baseline_test:expr) => {
         paste! {
             let AllBenchResults {
                 candle: [<$name _candle>],
@@ -171,11 +171,11 @@ macro_rules! run_a_bench {
             } = [<benchmark_ $name>](&$device, $n);
 
             let candle = [<$name _candle>].duration_secs / $n as f64;
-            let torch = [<$name _torch>].duration_secs / $n as f64;
+            let torch = ([<$name _torch>].duration_secs - $baseline_test) / $n as f64;
             let result = if candle <= torch {
-                format!("✅ Candle faster than Torch by {:.3}%", (1. - candle / torch ) * 100.)
+                format!("✅ Candle faster than Torch by {:.3}x", torch / candle)
             } else {
-                format!("❌ Candle slower than Torch by {:.3}%", (1. - torch / candle ) * 100.)
+                format!("❌ Candle slower than Torch by {:.3}x", candle / torch)
             };
 
             $results.push(TableRow {

@@ -5,22 +5,22 @@ use crate::benchmark_same_shape_unary;
 
 #[inline(never)]
 fn do_relu(a: &Tensor) {
-    let _ = candle_nn::Activation::Relu.forward(a);
+    let _ = candle_nn::Activation::Relu.forward(a).unwrap();
 }
 
 #[inline(never)]
 fn do_gelu(a: &Tensor) {
-    let _ = candle_nn::Activation::Gelu.forward(a);
+    let _ = candle_nn::Activation::Gelu.forward(a).unwrap();
 }
 
 #[inline(never)]
 fn do_silu(a: &Tensor) {
-    let _ = candle_nn::Activation::Silu.forward(a);
+    let _ = candle_nn::Activation::Silu.forward(a).unwrap();
 }
 
 #[inline(never)]
 fn do_softmax(a: &Tensor) {
-    let _ = candle_nn::ops::softmax_last_dim(a);
+    let _ = candle_nn::ops::softmax_last_dim(a).unwrap();
 }
 
 benchmark_same_shape_unary!((1024, 1024), relu, do_relu, "torch.relu(a)");

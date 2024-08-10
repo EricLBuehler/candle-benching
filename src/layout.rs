@@ -4,17 +4,17 @@ use crate::benchmark_same_shape_layout;
 
 #[inline(never)]
 fn do_reshape(a: &Tensor) {
-    let _ = a.reshape((4096, 2048));
+    let _ = a.reshape((4096, 2048)).unwrap();
 }
 
 #[inline(never)]
 fn do_transpose(a: &Tensor) {
-    let _ = a.t();
+    let _ = a.t().unwrap();
 }
 
 #[inline(never)]
 fn do_narrow(a: &Tensor) {
-    let _ = a.narrow(1, 0, 512);
+    let _ = a.narrow(1, 0, 512).unwrap();
 }
 
 benchmark_same_shape_layout!(
