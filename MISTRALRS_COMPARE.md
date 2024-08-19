@@ -34,6 +34,12 @@ Mon Aug 19 17:03:11 2024
 - TheBloke/Mistral-7B-Instruct-v0.1-GGUF
 - mistral-7b-instruct-v0.1.Q4_K_S.gguf
 
+**Candle commit**
+```
+$ git rev-parse HEAD
+b47c0bc475cc955805d9379b4444aebf3e9a516d
+```
+
 ## ToC
 
 - [Results](#results)
