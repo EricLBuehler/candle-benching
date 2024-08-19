@@ -57,6 +57,8 @@ Tests conducted with no warmup runs, in order of run id.
 cargo run --release --features cuda -- --port 1234 --log output.txt gguf -t mistralai/Mistral-7B-Instruct-v0.1 -m TheBloke/Mistral-7B-Instruct-v0.1-GGUF -f mistral-7b-instruct-v0.1.Q4_K_S.gguf
 ```
 
+**For candle:**
+
 ```
 cargo run --release --features cuda --example quantized -- --which 7b-mistral-instruct --prompt "<s> [INST] What is graphene? [/INST]"
 ```
@@ -86,6 +88,8 @@ Tests conducted with no warmup runs, in order of run id.
 ```
 cargo run --release --features cuda -- --port 1234 --log output.txt --no-paged-attn gguf -t mistralai/Mistral-7B-Instruct-v0.1 -m TheBloke/Mistral-7B-Instruct-v0.1-GGUF -f mistral-7b-instruct-v0.1.Q4_K_S.gguf
 ```
+
+**For candle:**
 
 ```
 cargo run --release --features cuda --example quantized -- --which 7b-mistral-instruct --prompt "<s> [INST] What is graphene? [/INST]"
